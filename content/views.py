@@ -6,7 +6,6 @@ from .models import Feed
 # Create your views here.
 class Main(APIView):
     def get(self, request):
-        Feed_list = Feed.objects.all()
+        feed_list = Feed.objects.all().order_by('-id')
         
-        print(Feed_list)
-        return render(request, "insta/main.html")
+        return render(request, "insta/main.html",context = dict(feeds = feed_list))

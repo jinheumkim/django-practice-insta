@@ -11,6 +11,11 @@
     <!-- google icon-->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
+    <!-- jquery -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+
+
     <title>하지옹하이 ㅋ</title>
 
     <style>
@@ -31,8 +36,39 @@
         min-height : auto;
         background-color : white
       }
-    </style>
+      
+      .modal_overlay{
+        width : 100%;
+        height : 100%;
+        position : absolute;
+        left : 0;
+        top : 0;
+        display : none;
+        flex-direction : column;
+        align-items : center;
+        justify-content : center;
+        background : rgba(0,0,0,0.8);
+        backdrop-fillter : blur(1.5px);
+        -webkit-backdrop-fillter : blur(1.5px);
+      }
 
+      .modal_window{
+        background : white;
+        backdrop-fillter : blur(13.5px);
+        -webkit-backdrop-fillter: blur(13.5px);
+        border-radius: 10px;
+        border : 1px solid rgba(255,255,255,0.18);
+        width : 800px;
+        height : 600px;
+        position : relative;
+        padding : 10px;
+      }
+
+
+    </style>
+  </head>
+  <body>
+  
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style = "position: fixed ; width :100%">
       <div class="container-fluid" style = "justify-content: space-between; flex-wrap: nowrap ; min-width : 1000px">
         <a class="navbar-brand" href="#">copy instagram</a>
@@ -40,7 +76,7 @@
             <div>
             <span class="material-symbols-outlined">home</span>
             <span class="material-symbols-outlined">send</span>
-            <span class="material-symbols-outlined">add_box</span>
+            <span id = "nav_bar_add_box" class="material-symbols-outlined">add_box</span>
             <span class="material-symbols-outlined">explore</span>
             <span class="material-symbols-outlined">favorite</span>
             </div>
@@ -49,85 +85,36 @@
 
     <div style= "display : flex; flex-direction : row; text-align : center ; justify-content : center; padding-top : 60px; background-color : #FAFAFA ">
       <div style="width : 500px; min-width : 500px; height : 1000px; margin-right : 300px">
-        <div class = "feedbox" style = "border : solid 1px gray; background-color : white">
-          <div style= "display : flex; flex-direction : row; align-items : center; margin : 0 20px">
-          <div class = "box" style = "width : 60px; height : 60px; ">
-            <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
-          </div>
-            <div>
-              ___isu___
+        {% for feed in feeds %}
+          <div class = "feedbox" style = "border : solid 1px gray; background-color : white">
+            <div style= "display : flex; flex-direction : row; align-items : center; margin : 0 20px">
+            <div class = "box" style = "width : 60px; height : 60px; ">
+              <img class = "profile" src = "{{ feed.profile_image }}">
             </div>
-          </div>
-          <div><img style = "width:100%" src = "https://mobile.busan.com/nas/wcms/wcms_data/photos/2019/05/30/2019053017131245333_l.jpg"> </div>
-          <div style= "margin :0 20px; display: flex; flex-direction: row; justify-content : space-between">
-            <div>
-              <span class="material-symbols-outlined">favorite</span>
-              <span class="material-symbols-outlined">mode_comment</span>
-              <span class="material-symbols-outlined">send</span>
+              <div>
+                {{ feed.uwer_id }}
+              </div>
             </div>
-            <div>
-              <span class="material-symbols-outlined">bookmark</span>
+            <div><img style = "width:100%" src = "{{ feed.image }}"> </div>
+            <div style= "margin :0 20px; display: flex; flex-direction: row; justify-content : space-between">
+              <div>
+                <span class="material-symbols-outlined">favorite</span>
+                <span class="material-symbols-outlined">mode_comment</span>
+                <span class="material-symbols-outlined">send</span>
+              </div>
+              <div>
+                <span class="material-symbols-outlined">bookmark</span>
+              </div>
             </div>
+            <div style = "margin :0 20px; text-align : left; font-size : 14px"> {{ feed.user_id }}님 <b>외 {{ feed.like_count }}명</b>이 좋아합니다.</div>
+            <div style = "margin :0 20px; text-align : left; font-size : 16px"><b>{{feed.user_id}}</b> {{ feed.content }}</div>
+            <div style = "margin :0 20px; text-align : left; font-size : 14px "><b>123</b> 댓글 댓글</div>
+            <div style = "margin :0 20px; text-align : left; font-size : 14px"><b>456</b> 댓글 댓글</div>
+            <div style = "border-top : solid 1px gray"><input type="text" class="form-control" style= "box-shadow : none; border : none; outline : none" placeholder="댓글 달기.."></div>
           </div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px"> ___isu___님 <b>외 10명</b>이 좋아합니다.</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 16px"><b>___isu___</b> 댓글을 자유롭게 달아주세요.</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px "><b>123</b> 댓글 댓글</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px"><b>456</b> 댓글 댓글</div>
-          <div style = "border-top : solid 1px gray"><input type="text" class="form-control" style= "box-shadow : none; border : none; outline : none" placeholder="댓글 달기.."></div>
-        </div>
-        <div class = "feedbox" style = "border : solid 1px gray; background-color : white">
-          <div style= "display : flex; flex-direction : row; align-items : center; margin : 0 20px">
-          <div class = "box" style = "width : 60px; height : 60px; ">
-            <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
-          </div>
-            <div>
-              ___isu___
-            </div>
-          </div>
-          <div><img style = "width:100%" src = "https://mobile.busan.com/nas/wcms/wcms_data/photos/2019/05/30/2019053017131245333_l.jpg"> </div>
-          <div style= "margin :0 20px; display: flex; flex-direction: row; justify-content : space-between">
-            <div>
-              <span class="material-symbols-outlined">favorite</span>
-              <span class="material-symbols-outlined">mode_comment</span>
-              <span class="material-symbols-outlined">send</span>
-            </div>
-            <div>
-              <span class="material-symbols-outlined">bookmark</span>
-            </div>
-          </div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px"> ___isu___님 <b>외 10명</b>이 좋아합니다.</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 16px"><b>___isu___</b> 댓글을 자유롭게 달아주세요.</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px "><b>123</b> 댓글 댓글</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px"><b>456</b> 댓글 댓글</div>
-          <div style = "border-top : solid 1px gray"><input type="text" class="form-control" style= "box-shadow : none; border : none; outline : none" placeholder="댓글 달기.."></div>
-        </div>
-        <div class = "feedbox" style = "border : solid 1px gray; background-color : white">
-          <div style= "display : flex; flex-direction : row; align-items : center; margin : 0 20px">
-          <div class = "box" style = "width : 60px; height : 60px; ">
-            <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
-          </div>
-            <div>
-              ___isu___
-            </div>
-          </div>
-          <div><img style = "width:100%" src = "https://mobile.busan.com/nas/wcms/wcms_data/photos/2019/05/30/2019053017131245333_l.jpg"> </div>
-          <div style= "margin :0 20px; display: flex; flex-direction: row; justify-content : space-between">
-            <div>
-              <span class="material-symbols-outlined">favorite</span>
-              <span class="material-symbols-outlined">mode_comment</span>
-              <span class="material-symbols-outlined">send</span>
-            </div>
-            <div>
-              <span class="material-symbols-outlined">bookmark</span>
-            </div>
-          </div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px"> ___isu___님 <b>외 10명</b>이 좋아합니다.</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 16px"><b>___isu___</b> 댓글을 자유롭게 달아주세요.</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px "><b>123</b> 댓글 댓글</div>
-          <div style = "margin :0 20px; text-align : left; font-size : 14px"><b>456</b> 댓글 댓글</div>
-          <div style = "border-top : solid 1px gray"><input type="text" class="form-control" style= "box-shadow : none; border : none; outline : none" placeholder="댓글 달기.."></div>
-        </div>
+        {% endfor feed in feeds %}
       </div>
+    
       <div style="width :400px; height : 1000px;  position : fixed; left : 62%">
         <div style= "display : flex; flex-direction : row; align-items : center; margin : 20px">
           <div class = "box" style = "width : 70px; height : 70px; ">
@@ -228,9 +215,96 @@
         </div>  
         <div style = "margin-top : 40px;color : gray; font-size : 12px; text-align:left">소개 도움말 홍보센터 API <br> 개인정보처리방침    약관    위치    인기 계정    해시태그    언어</div>
         <div style = "margin-top : 20px;color : gray; font-size : 12px; text-align:left">2021 인스타그램 프롬 페이스북</div>
-    <!-- Optional JavaScript; choose one of the two! -->
+      </div>
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
+
+
+
+      <div class = "modal_overlay">
+        <div class = "modal_window">
+          <div style = "display : flex; flex-direction : row; justify-content : space-between">
+            <div style = "width : 40px">
+              
+            </div>
+            <div>
+              새 이미지 업로드
+            </div>
+            <div style = "width : 40px">
+              <span class="material-symbols-outlined">close</span>
+            </div>
+          </div>
+          <div class = "img_upload_space" style= "width : 780px; height : 500px; margin-top: 20px">
+          </div>
+        </div>
+      </div>
+
+
+
+
+        <!-- Optional JavaScript; choose one of the two! -->
+    <script>
+      $('#nav_bar_add_box').click(function(){
+        $('.modal_overlay').css({
+          display : 'flex'
+        });
+        $(document.body).css({
+          overflow : 'hidden'
+        })
+      });
+      
+      $('.img_upload_space')
+        .on("dragover", dragOver)
+        .on("dragleave", dragOver)
+        .on("drop", uploadFiles);
+
+      function dragOver(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        console.log(e);
+
+        if (e.type == "dragover"){
+          $(e.target).css({
+            "background-color" : "black",
+            "outline-offset" : "-20px"
+          });
+        } else {
+          $(e.target).css({
+            "background-color" : "gray",
+            "outline-offset" : "-10px"
+          });
+        }
+      }
+
+      function uploadFiles(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        e.dataTransfer = e.originalEvent.dataTransfer;
+        var files = e.target.files || e.dataTransfer.files;
+        if(files.length > 1) {
+          alert('하나만 올려라.');
+          return;
+        }
+
+      if(files[0].type.match(/image.*/)) {
+        $(e.target).css({
+          "background-image": "url(" + window.URL.createObjectURL(files[0]) + ")",
+          "outline" : "none",
+          "background-size" : "100% 100%"
+        });
+      } else {
+        alert('이미지가 아닙니다.');
+        return;
+      }
+    }
+  
+
+      
+    </script>
+
+    
+        <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->
