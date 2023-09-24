@@ -219,8 +219,8 @@
 
 
 
-
-      <div class = "modal_overlay">
+      <!-- 첫 번째 모달 창 -->
+      <div id = "first_modal" class = "modal_overlay">
         <div class = "modal_window">
           <div style = "display : flex; flex-direction : row; justify-content : space-between">
             <div style = "width : 40px">
@@ -233,7 +233,37 @@
               <span class="material-symbols-outlined">close</span>
             </div>
           </div>
-          <div class = "img_upload_space" style= "width : 780px; height : 500px; margin-top: 20px">
+          <div class = "img_upload_space" style= "border-top : solid 1px gray; width : 780px; height : 500px;">
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 두 번째 모달 창  -->
+      <div id = "second_modal" class = "modal_overlay">
+        <div class = "modal_window">
+          <div style = "display : flex; flex-direction : row; justify-content : space-between">
+            <div style = "width : 40px">
+              
+            </div>
+            <div>
+              새 이미지 업로드
+            </div>
+            <div style = "width : 40px">
+              <span class="material-symbols-outlined">close</span>
+            </div>
+          </div>
+          <div style = "display : flex; flex-direction : row">
+            <div class = "img_upload_space" style= "border-top : solid 1px gray; width : 500px; height : 500px;">
+            </div>
+            <div style = "border-left : solid 1px gray;">
+              <div>
+                <textarea style = "width : 276px; height : 400px" class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
+              </div>
+              <button type="botton" class="btn btn-primary" style="width : 100%">
+                공유하기
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -244,7 +274,7 @@
         <!-- Optional JavaScript; choose one of the two! -->
     <script>
       $('#nav_bar_add_box').click(function(){
-        $('.modal_overlay').css({
+        $('#first_modal').css({
           display : 'flex'
         });
         $(document.body).css({
@@ -288,10 +318,21 @@
         }
 
       if(files[0].type.match(/image.*/)) {
-        $(e.target).css({
+        $('#first_modal').css({
+          display : 'none'
+        });
+
+        $('#second_modal').css({
+          display : 'flex'
+        });
+
+
+        $('.img_upload_space').css({
           "background-image": "url(" + window.URL.createObjectURL(files[0]) + ")",
           "outline" : "none",
-          "background-size" : "100% 100%"
+          "background-size" : "100%",
+          "background-repeat" : "no-repeat",
+          "background-center" : "center"
         });
       } else {
         alert('이미지가 아닙니다.');
