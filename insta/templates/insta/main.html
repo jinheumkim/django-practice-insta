@@ -93,7 +93,7 @@
               <img class = "profile" src = "{{ feed.profile_image }}">
             </div>
               <div>
-                {{ feed.uwer_id }}
+                {{ feed.user_id }}
               </div>
             </div>
             <div><img style = "width:100%" src = "{% get_media_prefix %}{{ feed.image }}"> </div>
@@ -123,10 +123,10 @@
           </div>
           <div style = "margin-left : 10px; text-align : left">
             <div style = "font-weight : bold">
-              ___isu___
+              {{user.nickname}}
             </div>
             <div style = "color : gray">
-              이수
+              {{user.name}}
             </div>
           </div>
         </div>
@@ -292,7 +292,7 @@
         let image = files[0].name;
         let content = $('#input_feed_content').val();
         let user_id = "___isu___";
-        let profile_image = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg"
+        let profile_image = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg";
 
         let fd = new FormData();
 
