@@ -74,12 +74,24 @@
       <div class="container-fluid" style = "justify-content: space-between; flex-wrap: nowrap ; min-width : 1000px">
         <a class="navbar-brand" href="#">copy instagram</a>
             <input class="form-control me-2" style="width:400px" type="search" placeholder="Search" aria-label="Search">
-            <div>
-            <span class="material-symbols-outlined">home</span>
-            <span class="material-symbols-outlined">send</span>
-            <span id = "nav_bar_add_box" class="material-symbols-outlined">add_box</span>
-            <span class="material-symbols-outlined">explore</span>
-            <span class="material-symbols-outlined">favorite</span>
+            <div style="display: flex;">
+              <span class="material-symbols-outlined" style="padding-right : 10px;">home</span>
+              <span class="material-symbols-outlined" style="padding-right : 10px;">send</span>
+              <span id = "nav_bar_add_box" class="material-symbols-outlined" style="padding-right : 10px;">add_box</span>
+              <span class="material-symbols-outlined" style="padding-right : 10px;">explore</span>
+              <span class="material-symbols-outlined" style="padding-right : 10px;">favorite</span>
+              <div class="dropdown">
+                <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <div class = "box" style = "width : 25px; height : 25px; ">
+                    <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
+                  </div>
+                </a>
+                <ul class="dropdown-menu" style="left: -158px;">
+                  <li><a class="dropdown-item" href="/content/profile">프로필</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
+                </ul>
+              </div>
             </div>
       </div>
     </nav>

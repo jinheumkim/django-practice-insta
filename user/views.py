@@ -1,6 +1,9 @@
+import os
+from uuid import uuid4
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from insta.settings import MEDIA_ROOT
 from .models import User
 from django.contrib.auth.hashers import make_password
 # Create your views here.
@@ -44,3 +47,32 @@ class login(APIView):
         
         else:
             return Response(status = 400, data = dict(message = "회원정보가 잘못되었습니다."))
+
+
+class logOut(APIView):
+    def get(self, request):
+        request.session.flush()
+        return render(request,"user/login.html")
+    
+class UploadProfile(APIView):
+    def post(self, request):
+        
+        file = request.FILES['file']
+        email = request.data.get('email')
+        
+        uuid_name = uuid4().hex
+        save_path = os.path.join(MEDIA_ROOT,uuid_name)
+        
+        with open(save_path, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+                
+        profile_image = uuid_name
+        email = request.data.get('email')
+        
+        user = User.objects.filter(email = email).first()
+        user.profile_image = profile_image
+        User.save
+        
+        return Response(status=200)
+    

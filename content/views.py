@@ -3,7 +3,6 @@ from uuid import uuid4
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from user.models import User
 from .models import Feed
 from insta.settings import MEDIA_ROOT
@@ -14,12 +13,13 @@ class Main(APIView):
     def get(self, request):
         feed_list = Feed.objects.all().order_by('-id')
         
-        email = request.session['email']
+        email = request.session.get('email',None)
         
         if email is None:
             return render(request, "user/login.html")
         
         user = User.objects.filter(email = email).first()
+        
         
         if user is None:
             return render(request, "user/login.html")
@@ -46,3 +46,19 @@ class UploadFeed(APIView):
         Feed.objects.create(image = image, content = content, user_id = user_id, profile_image = profile_image,like_count = 0)
         
         return Response(status=200)
+    
+class Profile(APIView):
+    def get(self, request):
+        email = request.session.get('email',None)
+        
+        if email is None:
+            return render(request, "user/login.html")
+        
+        user = User.objects.filter(email = email).first()
+        
+        if user is None:
+            return render(request, "user/login.html")
+        
+        return render(request, "content/profile.html" , context = dict(user = user))
+    
+        
