@@ -18,9 +18,7 @@ class Main(APIView):
             user = User.objects.filter(email = feed.email).first()
             feed_list.append(dict(image = feed.image,
                                   content = feed.content,
-                                  like_count = feed.like_count,
-                                  profile_image= user.profile_image,
-                                  nickname = user.nickname))
+                                  like_count = feed.like_count))
         email = request.session.get('email',None)
         
         if email is None:

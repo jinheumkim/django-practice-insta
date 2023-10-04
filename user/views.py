@@ -26,7 +26,7 @@ class Join(APIView):
                             profile_image = "default_profile.jpg")
         return Response(status = 200)
 
-class login(APIView):
+class Login(APIView):
     def get(self, request):
         return render(request,"user/login.html")
     
@@ -49,7 +49,7 @@ class login(APIView):
             return Response(status = 400, data = dict(message = "회원정보가 잘못되었습니다."))
 
 
-class logOut(APIView):
+class LogOut(APIView):
     def get(self, request):
         request.session.flush()
         return render(request,"user/login.html")
@@ -73,7 +73,6 @@ class UploadProfile(APIView):
         user = User.objects.filter(email = email).first()
         user.profile_image = profile_image
         user.save()
-        
         
         return Response(status=200)
     
