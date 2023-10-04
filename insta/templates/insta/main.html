@@ -51,6 +51,7 @@
         background : rgba(0,0,0,0.8);
         backdrop-filter : blur(1.5px);
         -webkit-backdrop-fillter : blur(1.5px);
+        z-index: 6;
       }
 
       .modal_window{
@@ -70,12 +71,12 @@
   </head>
   <body>
   
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style = "position: fixed ; width :100%">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style = "position: fixed ; width :100%; z-index : 5">
       <div class="container-fluid" style = "justify-content: space-between; flex-wrap: nowrap ; min-width : 1000px">
         <a class="navbar-brand" href="#">copy instagram</a>
             <input class="form-control me-2" style="width:400px" type="search" placeholder="Search" aria-label="Search">
             <div style="display: flex;">
-              <span class="material-symbols-outlined" style="padding-right : 10px;">home</span>
+              <a href = "/main" class="material-symbols-outlined" style="padding-right : 10px; color : black; text-decoration : none">home</a>
               <span class="material-symbols-outlined" style="padding-right : 10px;">send</span>
               <span id = "nav_bar_add_box" class="material-symbols-outlined" style="padding-right : 10px;">add_box</span>
               <span class="material-symbols-outlined" style="padding-right : 10px;">explore</span>
@@ -83,7 +84,7 @@
               <div class="dropdown">
                 <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class = "box" style = "width : 25px; height : 25px; ">
-                    <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
+                    <img class = "profile" src = "{% get_media_prefix %}{{ user.profile_image }}">
                   </div>
                 </a>
                 <ul class="dropdown-menu" style="left: -158px;">
@@ -101,8 +102,8 @@
         {% for feed in feeds %}
           <div class = "feedbox" style = "border : solid 1px gray; background-color : white">
             <div style= "display : flex; flex-direction : row; align-items : center; margin : 0 20px">
-            <div class = "box" style = "width : 60px; height : 60px; ">
-              <img class = "profile" src = "{{ feed.profile_image }}">
+            <div class = "box" style = "width : 50px; height : 50px; ">
+              <img class = "profile" src = "{% get_media_prefix %}{{ feed.profile_image }}">
             </div>
               <div>
                 {{ feed.user_id }}
@@ -128,10 +129,10 @@
         {% endfor feed in feeds %}
       </div>
     
-      <div style="width :400px; height : 1000px;  position : fixed; left : 62%">
+      <div style="width :400px; height : 1000px;  position : fixed; left : 62%; z-index : 0">
         <div style= "display : flex; flex-direction : row; align-items : center; margin : 20px">
           <div class = "box" style = "width : 70px; height : 70px; ">
-            <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
+            <img class = "profile" src = "{% get_media_prefix %}{{ user.profile_image }}">
           </div>
           <div style = "margin-left : 10px; text-align : left">
             <div style = "font-weight : bold">
@@ -243,7 +244,7 @@
               새 이미지 업로드
             </div>
             <div style = "width : 40px">
-              <button type="button" class="btn-close" aria-label="Close"></button>
+              <span class="modal-close material-symbols-outlined">close</span>
             </div>
           </div>
           <div class = "img_upload_space" style= "border-top : solid 1px gray; width : 780px; height : 500px;">
@@ -263,7 +264,7 @@
               새 이미지 업로드
             </div>
             <div style = "width : 40px">
-              <span class="material-symbols-outlined">close</span>
+              <span class="modal-close material-symbols-outlined">close</span>
             </div>
           </div>
           <div style = "display : flex; flex-direction : row">
@@ -286,6 +287,16 @@
 
         <!-- Optional JavaScript; choose one of the two! -->
     <script>
+      $('.modal-close').click(function(){
+        $('#first_modal').css({
+          display : 'none'
+        });
+
+        $('#second_modal').css({
+          display : 'none'
+        });
+      });
+
       let files;
 
       $('#nav_bar_add_box').click(function(){
@@ -303,8 +314,8 @@
         let file = files[0];
         let image = files[0].name;
         let content = $('#input_feed_content').val();
-        let user_id = "___isu___";
-        let profile_image = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg";
+        let user_id = "{{user.nickname}}";
+        let profile_image = "{{user.profile_image}}";
 
         let fd = new FormData();
 

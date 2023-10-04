@@ -23,7 +23,7 @@ class Join(APIView):
                             nickname = nickname,
                             name = name,
                             password = make_password(password),
-                            profile_image = 'default_profile.jpg')
+                            profile_image = "default_profile.jpg")
         return Response(status = 200)
 
 class login(APIView):
@@ -72,7 +72,8 @@ class UploadProfile(APIView):
         
         user = User.objects.filter(email = email).first()
         user.profile_image = profile_image
-        User.save
+        user.save()
+        
         
         return Response(status=200)
     
