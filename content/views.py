@@ -1,10 +1,10 @@
-import os
 from uuid import uuid4
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from user.models import User
 from .models import Feed
+from user.models import User
+import os
 from insta.settings import MEDIA_ROOT
 
 

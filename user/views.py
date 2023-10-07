@@ -2,10 +2,10 @@ import os
 from uuid import uuid4
 from django.shortcuts import render
 from rest_framework.response import Response
-from insta.settings import MEDIA_ROOT
-from rest_framework.views import APIView
 from .models import User
 from django.contrib.auth.hashers import make_password
+from insta.settings import MEDIA_ROOT
+from rest_framework.views import APIView
 
 # Create your views here.
 
