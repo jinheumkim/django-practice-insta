@@ -69,9 +69,9 @@ class UploadProfile(APIView):
                 destination.write(chunk)
                 
         profile_image = uuid_name
-        email = request.data.get('email')
         
         user = User.objects.filter(email = email).first()
+        
         user.profile_image = profile_image
         user.save()
         
