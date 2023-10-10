@@ -2,7 +2,7 @@ from uuid import uuid4
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Feed, Like, Bookmark, Reply
+from .models import Feed, Reply, Like, Bookmark
 from user.models import User
 import os
 from insta.settings import MEDIA_ROOT
@@ -11,6 +11,16 @@ from insta.settings import MEDIA_ROOT
 # Create your views here.
 class Main(APIView):
     def get(self, request):
+        email = request.session.get('email',None)
+        if email is None:
+            return render(request, "user/login.html")
+        
+        user = User.objects.filter(email = email).first()
+        
+        
+        if user is None:
+            return render(request, "user/login.html")
+        
         feed_object_list = Feed.objects.all().order_by('-id')
         feed_list = []
         
@@ -22,25 +32,17 @@ class Main(APIView):
                 user = User.objects.filter(email = reply.email).first()
                 reply_list.append(dict(reply_content = reply.reply_content,
                                        nickname = user.nickname))
-            feed_list.append(dict(image = feed.image,
+            feed_list.append(dict(id = feed.id,
+                                  image = feed.image,
                                   content = feed.content,
-                                  like_count = feed.like_count,
                                   profile_image = user.profile_image,
                                   nickname = user.nickname,
                                   reply_list = reply_list))
-            
-        email = request.session.get('email',None)
-        
-        if email is None:
-            return render(request, "user/login.html")
-        
-        user = User.objects.filter(email = email).first()
-        
-        
-        if user is None:
-            return render(request, "user/login.html")
         
         return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user))
+    
+    
+    
     
 
 class UploadFeed(APIView):
@@ -77,22 +79,13 @@ class Profile(APIView):
         return render(request, "content/profile.html" , context = dict(user = user))
     
 class UploadReply(APIView):
-    def Post(self, request):
+    def post(self, request):
         
-        feed_id = request.data.get('feed_id',None)
-        reply_content = request.data.get('reply_content',None)
+        feed_id = request.data.get('feed_id', None)
+        reply_content = request.data.get('reply_content', None)
         email = request.session.get('email',None)
         
-        Reply.objects.create(feed_id = feed_id, reply_content = reply_content, email = email)
+        Reply.objects.create(feed_id=feed_id, reply_content=reply_content, email=email)
         
         return Response(status=200) 
     
-class UploadReply(APIView):
-    def post(self, request):
-        feed_id = request.data.get('feed_id', None)
-        reply_content = request.data.get('reply_content', None)
-        email = request.session.get('email', None)
-
-        Reply.objects.create(feed_id=feed_id, reply_content=reply_content, email=email)
-
-        return Response(status=200)
