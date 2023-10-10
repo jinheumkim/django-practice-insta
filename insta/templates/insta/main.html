@@ -106,7 +106,7 @@
               <img class = "profile" src = "{% get_media_prefix %}{{ feed.profile_image }}">
             </div>
               <div>
-                {{ feed.user_id }}
+                {{ feed.nickname }}
               </div>
             </div>
             <div><img style = "width:100%" src = "{% get_media_prefix %}{{ feed.image }}"> </div>
@@ -122,9 +122,15 @@
             </div>
             <div style = "margin :0 20px; text-align : left; font-size : 14px"> {{ feed.user_id }}님 <b>외 {{ feed.like_count }}명</b>이 좋아합니다.</div>
             <div style = "margin :0 20px; text-align : left; font-size : 16px"><b>{{feed.user_id}}</b> {{ feed.content }}</div>
-            <div style = "margin :0 20px; text-align : left; font-size : 14px "><b>123</b> 댓글 댓글</div>
-            <div style = "margin :0 20px; text-align : left; font-size : 14px"><b>456</b> 댓글 댓글</div>
-            <div style = "border-top : solid 1px gray"><input type="text" class="form-control" style= "box-shadow : none; border : none; outline : none" placeholder="댓글 달기.."></div>
+            {% for reply in feed.reply_list %}
+              <div style = "margin :0 20px; text-align : left; font-size : 14px "><b>{{ reply.nickname }}</b>{{ reply.reply_content }}</div>
+            {% endfor%}
+            <div style = "display : flex; flex-direction : row; align-items : center; border-top : solid 1px gray">
+              <input id = "reply_{{feed.id}}" type="text" class="form-control" style= "box-shadow : none; border : none; outline : none" placeholder="댓글 달기..">
+              <div feed_id = "{{feed.id}}" class = "upload_reply"  style="width : 50px; color :cornflowerblue; font-weight :bold">
+                게시
+              </div>
+            </div>
           </div>
         {% endfor feed in feeds %}
       </div>
@@ -287,6 +293,43 @@
 
         <!-- Optional JavaScript; choose one of the two! -->
     <script>
+      $('.upload_reply').click(function(event){
+        let feed_id = event.target.attributes.getNamedItem('feed_id').value;
+        let reply_id = 'reply_' + feed_id;
+
+        let reply_content = $('#'+reply_id).val();
+
+
+        if (reply_content.length <= 0){
+          alert('댓글을 입력하세요.');
+          return 0;
+        }
+
+        $.ajax({
+          url : "/content/reply",
+          data : {
+                  feed_id : feed_id,
+                  reply_content : reply_content
+          },
+          method : "POST",
+
+          success : function (data){
+            console.log("성공");
+            alert("댓글 달기 완료")
+          },
+          error : function (request, status, error){
+            console.log("에러");
+          },
+          complete : function(){
+            console.log("완료");
+            location.replace('');
+          }
+
+        });
+
+      });
+
+
       $('.modal-close').click(function(){
         $('#first_modal').css({
           display : 'none'
@@ -314,17 +357,13 @@
         let file = files[0];
         let image = files[0].name;
         let content = $('#input_feed_content').val();
-        let user_id = "{{user.nickname}}";
-        let profile_image = "{{user.profile_image}}";
-
+        
         let fd = new FormData();
 
         fd.append('file', file);
         fd.append('image', image);
         fd.append('content', content);
-        fd.append('user_id', user_id);
-        fd.append('profile_image', profile_image);  
-
+        
 
         $.ajax({
           url : "/content/upload",
