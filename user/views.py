@@ -86,7 +86,9 @@ class Search(APIView):
         
         user = User.objects.filter(email = email).first()
         
+        query = request.GET.get('q', '')
+        results = User.objects.filter(name__icontains=query)
+        
         if user is None:
             return render(request, "user/login.html")
-        
-        return render(request, "user/search.html", context = dict(user = user))
+        return render(request, "user/search.html", context = dict(user = user, query = query, results=results))

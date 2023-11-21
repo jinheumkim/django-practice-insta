@@ -2,7 +2,7 @@ from uuid import uuid4
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Feed, Reply, Like, Bookmark
+from .models import Feed, Reply, Like, Bookmark, Follow
 from user.models import User
 import os
 from insta.settings import MEDIA_ROOT
@@ -13,12 +13,6 @@ class Main(APIView):
     def get(self, request):
         email = request.session.get('email',None)
         if email is None:
-            return render(request, "user/login.html")
-        
-        user = User.objects.filter(email = email).first()
-        
-        
-        if user is None:
             return render(request, "user/login.html")
         
         feed_object_list = Feed.objects.all().order_by('-id')
@@ -44,6 +38,15 @@ class Main(APIView):
                                   reply_list = reply_list,
                                   is_liked = is_liked,
                                   is_marked = is_marked))
+        
+        
+        
+        user = User.objects.filter(email = email).first()
+        
+        if user is None:
+                return render(request, "user/login.html")
+            
+        
         
         return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user))
     
@@ -148,5 +151,12 @@ class ToggleBookmark(APIView):
             bookmark.save()
         else:
             Bookmark.objects.create(feed_id=feed_id, is_marked=is_marked, email = email)
+        
+        return Response(status=200)
+    
+class FollowList(APIView):
+    def post(self, request):
+        user_id = request.data.get('user_id',None)
+        following = request.data.get('following',None)
         
         return Response(status=200)

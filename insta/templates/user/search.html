@@ -70,13 +70,12 @@
     </style>
   </head>
   <body>
-  
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style = "position: fixed ; width :100%; z-index : 5">
         <div class="container-fluid" style = "justify-content: space-between; flex-wrap: nowrap ; min-width : 1000px">
           <a class="navbar-brand" href="/main">copy instagram</a>
-              <div style="display: flex;"> 
+              <div style="display: flex;">
                 <button onclick="window.history.back()" style="border : none; align-items : center; padding-right : 10px" class="material-icons">arrow_back</button>
-                <input class="form-control me-2" style="width:400px" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control me-2" id = "search" style="width:400px" type="search" placeholder="Search" aria-label="Search">
                 <button class = "btn-outline" >검색</button>
               </div>
               <div style="display: flex;">
@@ -149,11 +148,11 @@
           </div>
         </div>
       </div>
-    
-
 
     <!-- Optional JavaScript; choose one of the two! -->
     <script>
+      $('#search').fun
+      
       $('#button_feed_list').click(function(){
         $('#feed_list').css({
           display : 'flex'

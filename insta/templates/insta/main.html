@@ -157,89 +157,24 @@
           <div style = "font-weight : bold; color : gray">회원님을 위한 추천</div> 
           <div><a href = "#" style = "text-decoration :none; color : black; font-weight : bold">모두보기</a></div>
         </div>
-        <div style= "display : flex; flex-direction : row; justify-content : space-between; align-items : center; margin : 5px">
-          <div style= "display : flex; flex-direction : row">
-            <div class = "box" style = "width : 35px; height : 35px; ">
-              <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
-            </div>
-            <div style = "margin-left : 10px; text-align : left">
-              <div style = "font-weight : bold; font-size: 14px">
-                asdfasdf
+        <div>
+          <div style= "display : flex; flex-direction : row; justify-content : space-between; align-items : center; margin : 5px">
+            <div style= "display : flex; flex-direction : row">
+              <div class = "box" style = "width : 35px; height : 35px; ">
+                <img class = "profile" src = "{%get_media_prefix%}{{user.profile_image}}">
               </div>
-              <div style = "color : gray; font-size: 14px">
-                이수 친구
+              <div style = "margin-left : 10px; text-align : left">
+                <div style = "font-weight : bold; font-size: 14px">
+                  {{user.nickname}}
+                </div>
+                <div style = "color : gray; font-size: 14px">
+                  {{user.name}}
+                </div>
               </div>
             </div>
+            <div><a href = "#" id = "follow_{{user.id}}"  style = "text-decoration :none; font-size : 14px; font-weight : bold">팔로우</a></div>
           </div>
-          <div><a href = "#" style = "text-decoration :none; font-size : 14px; font-weight : bold">팔로우</a></div>
         </div>
-        <div style= "display : flex; flex-direction : row; justify-content : space-between; align-items : center; margin : 5px">
-          <div style= "display : flex; flex-direction : row">
-            <div class = "box" style = "width : 35px; height : 35px; ">
-              <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
-            </div>
-            <div style = "margin-left : 10px; text-align : left">
-              <div style = "font-weight : bold; font-size: 14px">
-                asdfasdf
-              </div>
-              <div style = "color : gray; font-size: 14px">
-                이수 친구
-              </div>
-            </div>
-          </div>
-          <div><a href = "#" style = "text-decoration :none; font-size : 14px; font-weight : bold">팔로우</a></div>
-        </div>
-        <div style= "display : flex; flex-direction : row; justify-content : space-between; align-items : center; margin : 5px">
-          <div style= "display : flex; flex-direction : row">
-            <div class = "box" style = "width : 35px; height : 35px; ">
-              <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
-            </div>
-            <div style = "margin-left : 10px; text-align : left">
-              <div style = "font-weight : bold; font-size: 14px">
-                asdfasdf
-              </div>
-              <div style = "color : gray; font-size: 14px">
-                이수 친구
-              </div>
-            </div>
-          </div>
-          <div><a href = "#" style = "text-decoration :none; font-size : 14px; font-weight : bold">팔로우</a></div>
-        </div>
-        <div style= "display : flex; flex-direction : row; justify-content : space-between; align-items : center; margin : 5px">
-          <div style= "display : flex; flex-direction : row">
-            <div class = "box" style = "width : 35px; height : 35px; ">
-              <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
-            </div>
-            <div style = "margin-left : 10px; text-align : left">
-              <div style = "font-weight : bold; font-size: 14px">
-                asdfasdf
-              </div>
-              <div style = "color : gray; font-size: 14px">
-                이수 친구
-              </div>
-            </div>
-          </div>
-          <div><a href = "#" style = "text-decoration :none; font-size : 14px; font-weight : bold">팔로우</a></div>
-        </div>
-        <div style= "display : flex; flex-direction : row; justify-content : space-between; align-items : center; margin : 5px">
-          <div style= "display : flex; flex-direction : row">
-            <div class = "box" style = "width : 35px; height : 35px; ">
-              <img class = "profile" src = "https://img.sbs.co.kr/newsnet/etv/upload/2020/02/27/30000643526_1280.jpg">
-            </div>
-            <div style = "margin-left : 10px; text-align : left">
-              <div style = "font-weight : bold; font-size: 14px">
-                asdfasdf
-              </div>
-              <div style = "color : gray; font-size: 14px">
-                이수 친구
-              </div>
-            </div>
-          </div>
-          <div><a href = "#" style = "text-decoration :none; font-size : 14px; font-weight : bold">팔로우</a></div>
-        </div>  
-        <div style = "margin-top : 40px;color : gray; font-size : 12px; text-align:left">소개 도움말 홍보센터 API <br> 개인정보처리방침    약관    위치    인기 계정    해시태그    언어</div>
-        <div style = "margin-top : 20px;color : gray; font-size : 12px; text-align:left">2021 인스타그램 프롬 페이스북</div>
-      </div>
 
       <!-- 첫 번째 모달 창 -->
       <div id = "first_modal" class = "modal_overlay">
@@ -295,6 +230,34 @@
 
         <!-- Optional JavaScript; choose one of the two! -->
     <script>
+      $('.follow').click(function(event){
+        let user_id = event.target.attributes.getNamedItem('user_id').value;
+        let follow_id = event.target.id;
+        let follow_text = $.trim($('#'+follow_id).html());
+        if(follow_text == 'follow'){
+          $('#'+follow_id).html('favorite_border');
+        }else{
+          $('#'+follow_id).html('favorite');
+        }
+
+        $.ajax({
+          url : "/content/follow",
+          data : {user_id :user_id,
+                  follow_text :follow_text
+          },
+          method : "POST",
+          success : function (data){
+            console.log("성공");
+          },
+          error : function (request, status, error){
+            console.log("에러");
+          },
+          complete : function(){
+            console.log("완료");
+          }
+        });
+      });
+
 
       $('.favorite').click(function(event){
         let feed_id = event.target.attributes.getNamedItem('feed_id').value;

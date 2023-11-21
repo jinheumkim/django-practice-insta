@@ -7,5 +7,5 @@ urlpatterns = [
     path('login',Login.as_view()),
     path('logout',LogOut.as_view()),
     path('profile/upload',UploadProfile.as_view()),
-    path('search',Search.as_view())
+    path('search',Search.as_view()),
 ]
