@@ -91,4 +91,6 @@ class Search(APIView):
         
         if user is None:
             return render(request, "user/login.html")
-        return render(request, "user/search.html", context = dict(user = user, query = query, results=results))
+        return render(request, "user/search.html", context = dict(user = user,
+                                                                  query = query,
+                                                                  results=results))

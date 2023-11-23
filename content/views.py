@@ -2,10 +2,11 @@ from uuid import uuid4
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Feed, Reply, Like, Bookmark, Follow
-from user.models import User
+from .models import Feed, Reply, Like, Bookmark
+from user.models import User, Follow
 import os
 from insta.settings import MEDIA_ROOT
+import random
 
 
 # Create your views here.
@@ -17,7 +18,6 @@ class Main(APIView):
         
         feed_object_list = Feed.objects.all().order_by('-id')
         feed_list = []
-        
         for feed in feed_object_list:
             user = User.objects.filter(email = feed.email).first()
             reply_object_list = Reply.objects.filter(feed_id = feed.id)
@@ -40,15 +40,19 @@ class Main(APIView):
                                   is_marked = is_marked))
         
         
-        
+        users = User.objects.all()
+            
         user = User.objects.filter(email = email).first()
+        
         
         if user is None:
                 return render(request, "user/login.html")
             
         
+            
         
-        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user))
+        
+        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user, users = users))
     
     
     
@@ -123,6 +127,7 @@ class ToggleLike(APIView):
         
         like = Like.objects.filter(feed_id=feed_id , email = email).first()
         
+        
         if like:
             like.is_like = is_like
             like.save()
@@ -154,9 +159,12 @@ class ToggleBookmark(APIView):
         
         return Response(status=200)
     
-class FollowList(APIView):
-    def post(self, request):
-        user_id = request.data.get('user_id',None)
-        following = request.data.get('following',None)
+class Follows(APIView):    
+    def post(self,request):
+        user_id = User.objects.data('user_id',None)
+        follow_id = User.objects.data('follow_id',None)
+        following_id = User.objects.date('following_id',None)
         
-        return Response(status=200)
+        Follow.objects.create(id = user_id, follow_id = follow_id, following_id = following_id)
+        
+        Response(status = 200)
