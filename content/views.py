@@ -40,10 +40,9 @@ class Main(APIView):
                                   is_marked = is_marked))
         
         
-        users = User.objects.all()
-            
-        user = User.objects.filter(email = email).first()
+        users = User.objects.exclude(email = email)
         
+        user = User.objects.filter(email = email).first()
         
         if user is None:
                 return render(request, "user/login.html")
@@ -161,10 +160,23 @@ class ToggleBookmark(APIView):
     
 class Follows(APIView):    
     def post(self,request):
-        user_id = User.objects.data('user_id',None)
-        follow_id = User.objects.data('follow_id',None)
-        following_id = User.objects.date('following_id',None)
+        user_id = request.data.get('user_id',None)
+        follower_id = request.data.get('follower_id',None)
+        following_id = request.data.get('following_id', None)
         
-        Follow.objects.create(id = user_id, follow_id = follow_id, following_id = following_id)
         
-        Response(status = 200)
+        if Follow.objects.filter(follower_id = follower_id, following_id = following_id).exists():
+             Follow.objects.filter(follower_id = follower_id, following_id = following_id).delete()
+        else :
+            Follow.objects.create(user_id = user_id, follower_id = follower_id, following_id = following_id)
+    
+               
+        return Response(status = 200)
+    
+    
+# if follow_text == '팔로우':
+#             Follow.objects.create(user_id = user_id, follower_id = follower_id, following_id = following_id)
+            
+#         else:
+#            if Follow.objects.filter(follower_id = follower_id, following_id = following_id).exists():
+#              Follow.objects.filter(follower_id = follower_id, following_id = following_id).delete()

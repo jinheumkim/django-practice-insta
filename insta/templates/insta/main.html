@@ -156,23 +156,23 @@
           <div style = "font-weight : bold; color : gray">회원님을 위한 추천</div> 
           <div><a href = "#" style = "text-decoration :none; color : black; font-weight : bold">모두보기</a></div>
         </div>
-        {%for user in users%}
+        {%for user_list in users%}
           <div>
             <div style= "display : flex; flex-direction : row; justify-content : space-between; align-items : center; margin : 5px; margin-top : 15px">
               <div style= "display : flex; flex-direction : row">
                 <div class = "box" style = "width : 35px; height : 35px; ">
-                  <img class = "profile" src = "{%get_media_prefix%}{{user.profile_image}}">
+                  <img class = "profile" src = "{%get_media_prefix%}{{user_list.profile_image}}">
                 </div>
                 <div style = "margin-left : 10px; text-align : left">
                   <div style = "font-weight : bold; font-size: 14px">
-                    {{user.nickname}}
+                    {{user_list.nickname}}
                   </div>
                   <div style = "color : gray; font-size: 14px">
-                    {{user.name}}
+                    {{user_list.name}}
                   </div>
                 </div>
               </div>
-              <span id = "follow_{{user.id}}" user_id = {{user.id}}  style = "text-decoration :none; font-size : 14px; font-weight : bold">팔로우</span>
+              <span user_id = {{user.id}} id = {{user_list.id}}  class = "follow" style = "text-decoration :none; font-size : 14px; font-weight : bold; cursor:pointer; color:cornflowerblue ">팔로우</span>
             </div>
           </div>
         {%endfor%}
@@ -235,21 +235,22 @@
         <!-- Optional JavaScript; choose one of the two! -->
     <script>
       $('.follow').click(function(event){
+        let following_id= event.target.id;
+        let follower_id = event.target.attributes.getNamedItem('user_id').value;
         let user_id = event.target.attributes.getNamedItem('user_id').value;
-        console.log(user_id)
-        let follow_id = event.target.id;
-        let following_id = event.target.id;
-        console.log(user_id)
-        if(follow_text == 'follow'){
-          $('#'+follow_id).html('favorite_border');
-        }else{
-          $('#'+follow_id).html('favorite');
+        let follow_text = $.trim($('#'+following_id).html());
+        if (follow_text == '팔로우'){
+         $('#'+following_id).html('언팔로우');
         }
-
+        else{ 
+          $('#'+following_id).html('팔로우');
+        }
         $.ajax({
           url : "/content/follow",
-          data : {user_id :user_id,
-                  follow_text :follow_text
+          data : {
+                  user_id : user_id,
+                  follower_id : follower_id,
+                  following_id :following_id,
           },
           method : "POST",
           success : function (data){
