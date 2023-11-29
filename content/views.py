@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Feed, Reply, Like, Bookmark
-from user.models import User, Follow
+from user.models import User,Follow
 import os
 from insta.settings import MEDIA_ROOT
 import random
@@ -164,19 +164,12 @@ class Follows(APIView):
         follower_id = request.data.get('follower_id',None)
         following_id = request.data.get('following_id', None)
         
+        id = request.session.get('id',None)
         
         if Follow.objects.filter(follower_id = follower_id, following_id = following_id).exists():
-             Follow.objects.filter(follower_id = follower_id, following_id = following_id).delete()
+            Follow.objects.filter(follower_id = follower_id, following_id = following_id).delete()
         else :
             Follow.objects.create(user_id = user_id, follower_id = follower_id, following_id = following_id)
-    
-               
-        return Response(status = 200)
-    
-    
-# if follow_text == '팔로우':
-#             Follow.objects.create(user_id = user_id, follower_id = follower_id, following_id = following_id)
             
-#         else:
-#            if Follow.objects.filter(follower_id = follower_id, following_id = following_id).exists():
-#              Follow.objects.filter(follower_id = follower_id, following_id = following_id).delete()
+        
+        return Response(status = 200)

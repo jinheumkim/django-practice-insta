@@ -177,7 +177,7 @@
           </div>
         {%endfor%}
         <div style = "margin-top : 40px;color : gray; font-size : 12px; text-align:left">소개 도움말 홍보센터 API <br> 개인정보처리방침    약관    위치    인기 계정    해시태그    언어</div>
-        <div style = "margin-top : 20px;color : gray; font-size : 12px; text-align:left">2021 인스타그램 프롬 페이스북</div>
+        <div style = "margin-top : 20px;color : gray; font-size : 12px; text-align:left">2023 인스타그램 프롬 페이스북</div>
 
       </div> 
       <!-- 첫 번째 모달 창 -->
@@ -248,6 +248,7 @@
         $.ajax({
           url : "/content/follow",
           data : {
+                  follow_text : follow_text,
                   user_id : user_id,
                   follower_id : follower_id,
                   following_id :following_id,
