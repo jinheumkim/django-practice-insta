@@ -172,7 +172,7 @@
                   </div>
                 </div>
               </div>
-              <span user_id = {{user.id}} id = {{user_list.id}}  class = "follow" style = "text-decoration :none; font-size : 14px; font-weight : bold; cursor:pointer; color:cornflowerblue ">팔로우</span>
+              <span user_id = {{user.id}} id = {{user_list.id}}  class = "follow" style = "text-decoration :none; font-size : 14px; font-weight : bold; cursor:pointer; color:cornflowerblue ">{%if Follow.user_id == user.id %}언팔로우{%else%}팔로우{%endif%}</span>
             </div>
           </div>
         {%endfor%}
@@ -236,7 +236,6 @@
     <script>
       $('.follow').click(function(event){
         let following_id= event.target.id;
-        let follower_id = event.target.attributes.getNamedItem('user_id').value;
         let user_id = event.target.attributes.getNamedItem('user_id').value;
         let follow_text = $.trim($('#'+following_id).html());
         if (follow_text == '팔로우'){
@@ -250,7 +249,6 @@
           data : {
                   follow_text : follow_text,
                   user_id : user_id,
-                  follower_id : follower_id,
                   following_id :following_id,
           },
           method : "POST",

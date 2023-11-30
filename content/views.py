@@ -161,15 +161,12 @@ class ToggleBookmark(APIView):
 class Follows(APIView):    
     def post(self,request):
         user_id = request.data.get('user_id',None)
-        follower_id = request.data.get('follower_id',None)
         following_id = request.data.get('following_id', None)
+        follow_text = request.data.get('follow_text', None)
         
-        id = request.session.get('id',None)
-        
-        if Follow.objects.filter(follower_id = follower_id, following_id = following_id).exists():
-            Follow.objects.filter(follower_id = follower_id, following_id = following_id).delete()
-        else :
-            Follow.objects.create(user_id = user_id, follower_id = follower_id, following_id = following_id)
+        if follow_text == '언팔로우':
+            Follow.objects.filter(following_id = following_id, user_id = user_id).delete()
+        else:
+            Follow.objects.create(following_id = following_id, user_id = user_id)
             
-        
         return Response(status = 200)
