@@ -80,7 +80,7 @@
             <div style="display: flex;">
               <a href = "/main" class="material-symbols-outlined" style="padding-right : 10px; color : black; text-decoration : none">home</a>
               <span class="material-symbols-outlined" style="padding-right : 10px;">send</span>
-              <span id = "nav_bar_add_box" class="material-symbols-outlined" style="padding-right : 10px;">add_box</span>
+              <span id = "nav_bar_add_box" class="material-symbols-outlined" style="padding-right : 10px; cursor : pointer">add_box</span>
               <span class="material-symbols-outlined" style="padding-right : 10px;">explore</span>
               <span class="material-symbols-outlined" style="padding-right : 10px;">favorite</span>
               <div class="dropdown">
@@ -172,7 +172,7 @@
                   </div>
                 </div>
               </div>
-              <span user_id = {{user.id}} id = {{user_list.id}}  class = "follow" style = "text-decoration :none; font-size : 14px; font-weight : bold; cursor:pointer; color:cornflowerblue ">{%if Follow.user_id == user.id %}언팔로우{%else%}팔로우{%endif%}</span>
+              <span user_id = {{user.id}} id = {{user_list.id}}  class = "follow" style = "text-decoration :none; font-size : 14px; font-weight : bold; cursor:pointer; color:cornflowerblue ">{%if follow.user_id == user.id and follow.following_id == user_list.id%}언팔로우{%else%}팔로우{%endif%}</span>
             </div>
           </div>
         {%endfor%}
@@ -191,7 +191,7 @@
               새 이미지 업로드
             </div>
             <div style = "width : 40px">
-              <span class="modal-close material-symbols-outlined">close</span>
+              <span class="modal-close material-symbols-outlined" style="cursor: pointer;">close</span>
             </div>
           </div>
           <div class = "img_upload_space" style= "border-top : solid 1px gray; width : 780px; height : 500px;">
@@ -211,7 +211,7 @@
               새 이미지 업로드
             </div>
             <div style = "width : 40px">
-              <span class="modal-close material-symbols-outlined">close</span>
+              <span class="modal-close material-symbols-outlined" style="cursor: pointer;">close</span>
             </div>
           </div>
           <div style = "display : flex; flex-direction : row">
@@ -359,11 +359,15 @@
 
       $('.modal-close').click(function(){
         $('#first_modal').css({
-          display : 'none'
+          complete : function(){
+            location.replace('/main');
+          }
         });
 
         $('#second_modal').css({
-          display : 'none'
+          complete : function(){
+            location.replace('/main');
+          }
         });
       });
 

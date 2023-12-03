@@ -46,12 +46,13 @@ class Main(APIView):
         
         if user is None:
                 return render(request, "user/login.html")
+        
+        
+        follow= Follow.objects.all()
             
         
-            
         
-        
-        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user, users = users))
+        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user, users = users, follow = follow))
     
     
     
@@ -165,8 +166,8 @@ class Follows(APIView):
         follow_text = request.data.get('follow_text', None)
         
         if follow_text == '언팔로우':
-            Follow.objects.filter(following_id = following_id, user_id = user_id).delete()
-        else:
-            Follow.objects.create(following_id = following_id, user_id = user_id)
-            
+            Follow.objects.filter(user_id = user_id ,following_id = following_id).delete()
+        else :
+            Follow.objects.create(user_id = user_id , following_id = following_id)
+        
         return Response(status = 200)
