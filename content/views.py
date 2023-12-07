@@ -48,11 +48,10 @@ class Main(APIView):
                 return render(request, "user/login.html")
         
         
-        follow= Follow.objects.all()
-            
+        follows = Follow.objects.all()
         
         
-        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user, users = users, follow = follow))
+        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user, users = users, follow = follows))
     
     
     
@@ -161,13 +160,15 @@ class ToggleBookmark(APIView):
     
 class Follows(APIView):    
     def post(self,request):
+        follow_text = request.data.get('follow_text', None)
         user_id = request.data.get('user_id',None)
         following_id = request.data.get('following_id', None)
-        follow_text = request.data.get('follow_text', None)
         
         if follow_text == '언팔로우':
-            Follow.objects.filter(user_id = user_id ,following_id = following_id).delete()
+            Follow.objects.filter(user_id = user_id, following_id = following_id).delete()
         else :
-            Follow.objects.create(user_id = user_id , following_id = following_id)
+            Follow.objects.create(user_id = user_id, following_id = following_id)
+            
         
+            
         return Response(status = 200)
