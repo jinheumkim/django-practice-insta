@@ -38,20 +38,29 @@ class Main(APIView):
                                   reply_list = reply_list,
                                   is_liked = is_liked,
                                   is_marked = is_marked))
+            
         
-        
-        users = User.objects.exclude(email = email)
+        follow_object_list = User.objects.exclude(email = email)
+        follow_list = []
+        for follow in follow_object_list:
+            login = User.objects.filter(email = email).first()
+            followed = Follow.objects.filter(user_id = login.id, following_id = follow.id).exists()
+            follow_list.append(dict(id = login.id,
+                                    profile_image = follow.profile_image,
+                                    nickname = follow.nickname,
+                                    name = follow.name,
+                                    following_id = follow.id,
+                                    followed = followed
+                                    ))
         
         user = User.objects.filter(email = email).first()
         
         if user is None:
                 return render(request, "user/login.html")
         
+    
         
-        follows = Follow.objects.all()
-        
-        
-        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user, users = users, follow = follows))
+        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user, follows = follow_list))
     
     
     
@@ -93,10 +102,16 @@ class Profile(APIView):
         like_feed_list = Feed.objects.filter(id__in = like_list)
         bookmark_list = list(Bookmark.objects.filter(email = email, is_marked = True).values_list('feed_id',flat = True))
         bookmark_feed_list = Feed.objects.filter(id__in = bookmark_list)
+        feed_list_count = Feed.objects.filter(email = email).count()
+        following_count = Follow.objects.exclude(user_id = user.id, following_id = None).count()
+        follower_count = Follow.objects.exclude(user_id = user.id, follower_id = None).count()
         return render(request, "content/profile.html" , context = dict(user = user, 
                                                                        feed_list = feed_list,
                                                                        like_feed_list = like_feed_list,
-                                                                       bookmark_feed_list = bookmark_feed_list
+                                                                       bookmark_feed_list = bookmark_feed_list,
+                                                                       following_count = following_count,
+                                                                       feed_list_count = feed_list_count,
+                                                                       follower_count = follower_count
                                                                        ))
     
 class UploadReply(APIView):
@@ -166,9 +181,10 @@ class Follows(APIView):
         
         if follow_text == '언팔로우':
             Follow.objects.filter(user_id = user_id, following_id = following_id).delete()
+            Follow.objects.all().update()
         else :
             Follow.objects.create(user_id = user_id, following_id = following_id)
-            
+            Follow.objects.all().update()
         
             
         return Response(status = 200)

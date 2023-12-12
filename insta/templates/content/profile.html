@@ -114,8 +114,10 @@
                     <span class="material-symbols-outlined">settings</span>
                 </div>
             </div>
-            <div style="margin-bottom : 20px;">
-                게시물 팔로워
+            <div style="margin-bottom : 20px ; display:flex; flex-direction :row;">
+                <div style="padding-right:20px">게시물 <b>{{feed_list_count}}</b></div>
+                <div style="padding-right:20px">팔로워 <b>{{follower_count}}</b></div>
+                <div>팔로잉 <b>{{ following_count }}</b></div>
             </div>
             <div>
                 <b>{{user.name }}</b>
