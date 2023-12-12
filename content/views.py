@@ -181,10 +181,8 @@ class Follows(APIView):
         
         if follow_text == '언팔로우':
             Follow.objects.filter(user_id = user_id, following_id = following_id).delete()
-            Follow.objects.all().update()
         else :
             Follow.objects.create(user_id = user_id, following_id = following_id)
-            Follow.objects.all().update()
         
             
         return Response(status = 200)

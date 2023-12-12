@@ -78,7 +78,6 @@
             <div style="display: flex;">
               <a class="material-symbols-outlined" href="/main" style="padding-right : 10px; color : black; text-decoration : none">home</a>
               <span class="material-symbols-outlined" style="padding-right : 10px;">send</span>
-              <span id = "nav_bar_add_box" class="material-symbols-outlined" style="padding-right : 10px;">add_box</span>
               <span class="material-symbols-outlined" style="padding-right : 10px;">explore</span>
               <span class="material-symbols-outlined" style="padding-right : 10px;">favorite</span>
               <div class="dropdown">
@@ -163,57 +162,6 @@
       </div>
     </div>
 
-      <!-- 첫 번째 모달 창 -->
-      <div id = "first_modal" class = "modal_overlay">
-        <div class = "modal_window">
-          <div style = "display : flex; flex-direction : row; justify-content : space-between">
-            <div style = "width : 40px">
-              
-            </div>
-            <div>
-              새 이미지 업로드
-            </div>
-            <div style = "width : 40px">
-              <span class="modal-close material-symbols-outlined">close</span>
-            </div>
-          </div>
-          <div class = "img_upload_space" style= "border-top : solid 1px gray; width : 780px; height : 500px;">
-          </div>
-        </div>
-      </div>
-
-
-      <!-- 두 번째 모달 창  -->
-      <div id = "second_modal" class = "modal_overlay">
-        <div class = "modal_window">
-          <div style = "display : flex; flex-direction : row; justify-content : space-between">
-            <div style = "width : 40px">
-              
-            </div>
-            <div>
-              새 이미지 업로드
-            </div>
-            <div style = "width : 40px">
-              <span class="modal-close material-symbols-outlined">close</span>
-            </div>
-          </div>
-          <div style = "display : flex; flex-direction : row">
-            <div class = "img_upload_space" style= "border-top : solid 1px gray; width : 500px; height : 500px;">
-            </div>
-            <div style = "border-left : solid 1px gray;">
-              <div>
-                <textarea id = "input_feed_content" style = "width : 276px; height : 400px" class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
-              </div>
-              <button id = "feed_create_button" type="botton" class="btn btn-primary" style="width : 100%">
-                공유하기
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-
-
     <!-- Optional JavaScript; choose one of the two! -->
     <script>
       $('#button_feed_list').click(function(){
@@ -253,62 +201,6 @@
       });
 
 
-      $('.modal-close').click(function(){
-        $('#first_modal').css({
-          display : 'none'
-        });
-
-        $('#second_modal').css({
-          display : 'none'
-        });
-      });
-
-        let files;
-  
-        $('#nav_bar_add_box').click(function(){
-          $('#first_modal').css({
-            display : 'flex'
-          });
-          $(document.body).css({
-            overflow : 'hidden'
-          })
-        });
-  
-        $('#feed_create_button').click(function(){
-          alert("공유하기 누름");
-          
-          let file = files[0];
-          let image = files[0].name;
-          let content = $('#input_feed_content').val();
-          
-          let fd = new FormData();
-  
-          fd.append('file', file);
-          fd.append('image', image);
-          fd.append('content', content);
-            
-  
-          $.ajax({
-            url : "/user/profile/upload",
-            data : fd,
-            method : "POST",
-            processData : false,
-            contentType : false,
-  
-            success : function (data){
-              console.log("성공");
-            },
-            error : function (request, status, error){
-              console.log("에러");
-            },
-            complete : function(){
-              console.log("완료");
-              location.replace('/content/profile');
-            }
-  
-          });
-            
-        });
         
         $('.img_upload_space')
           .on("dragover", dragOver)
