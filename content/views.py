@@ -29,6 +29,7 @@ class Main(APIView):
             like_count = Like.objects.filter(feed_id = feed.id, is_like = True).count()
             is_liked = Like.objects.filter(feed_id = feed.id, email = email, is_like = True).exists()
             is_marked = Bookmark.objects.filter(feed_id = feed.id, email = email, is_marked = True).exists()
+            delete = Feed.objects.filter(email = email).exists()
             feed_list.append(dict(id = feed.id,
                                   image = feed.image,
                                   like_count = like_count,
@@ -37,7 +38,8 @@ class Main(APIView):
                                   nickname = user.nickname,
                                   reply_list = reply_list,
                                   is_liked = is_liked,
-                                  is_marked = is_marked))
+                                  is_marked = is_marked,
+                                  delete = delete))
             
         
         follow_object_list = User.objects.exclude(email = email)
@@ -186,3 +188,13 @@ class Follows(APIView):
         
             
         return Response(status = 200)
+    
+class FeedDelete(APIView):
+    def post(self,request):
+        email = request.session.get('email', None)
+        feed_id = request.data.get('feed_id', None)
+        
+        if Feed.objects.filter(email = email, id = feed_id).exists():
+            Feed.objects.filter(email = email, id = feed_id).delete()
+        
+        return Response(status=200)

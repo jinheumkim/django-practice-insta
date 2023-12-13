@@ -74,67 +74,70 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style = "position: fixed ; width :100%; z-index : 5">
       <div class="container-fluid" style = "justify-content: space-between; flex-wrap: nowrap ; min-width : 1000px">
         <a class="navbar-brand" href="#">copy instagram</a>
-            <div style="display: flex;"> 
-              <input type="button" onclick="location.href='/user/search'" class="form-control me-2" style="width:400px; text-align : left" value="Search" >
+          <div style="display: flex;"> 
+            <input type="button" onclick="location.href='/user/search'" class="form-control me-2" style="width:400px; text-align : left" value="Search" >
+          </div>
+          <div style="display: flex;">
+            <a href = "/main" class="material-symbols-outlined" style="padding-right : 10px; color : black; text-decoration : none">home</a>
+            <span class="material-symbols-outlined" style="padding-right : 10px;">send</span>
+            <span id = "nav_bar_add_box" class="material-symbols-outlined" style="padding-right : 10px; cursor : pointer">add_box</span>
+            <span class="material-symbols-outlined" style="padding-right : 10px;">explore</span>
+            <span class="material-symbols-outlined" style="padding-right : 10px;">favorite</span>
+            <div class="dropdown">
+              <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class = "box" style = "width : 25px; height : 25px; ">
+                  <img class = "profile" src = "{% get_media_prefix %}{{ user.profile_image }}">
+                </div>
+              </a>
+              <ul class="dropdown-menu" style="left: -158px;">
+                <li><a class="dropdown-item" href="/content/profile">프로필</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
+              </ul>
             </div>
-            <div style="display: flex;">
-              <a href = "/main" class="material-symbols-outlined" style="padding-right : 10px; color : black; text-decoration : none">home</a>
-              <span class="material-symbols-outlined" style="padding-right : 10px;">send</span>
-              <span id = "nav_bar_add_box" class="material-symbols-outlined" style="padding-right : 10px; cursor : pointer">add_box</span>
-              <span class="material-symbols-outlined" style="padding-right : 10px;">explore</span>
-              <span class="material-symbols-outlined" style="padding-right : 10px;">favorite</span>
-              <div class="dropdown">
-                <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <div class = "box" style = "width : 25px; height : 25px; ">
-                    <img class = "profile" src = "{% get_media_prefix %}{{ user.profile_image }}">
-                  </div>
-                </a>
-                <ul class="dropdown-menu" style="left: -158px;">
-                  <li><a class="dropdown-item" href="/content/profile">프로필</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
-                </ul>
-              </div>
-            </div>
+          </div>
       </div>
     </nav>
 
     <div style= "display : flex; flex-direction : row; text-align : center ; justify-content : center; padding-top : 60px; ">
       <div style="width : 500px; min-width : 500px; height : 1000px; margin-right : 300px">
         {% for feed in feeds %}
-          <div class = "feedbox" style = "border : solid 1px gray; background-color : white">
-            <div style= "display : flex; flex-direction : row; align-items : center; margin : 0 20px">
-            <div class = "box" style = "width : 50px; height : 50px; ">
-              <a href = "/content/profile">
-                <img class = "profile" src = "{% get_media_prefix %}{{ user.profile_image }}">
-              </a>
-            </div>
-              <div>
-                {{ feed.nickname }}
+          <div id = "feed_list_{{feed.id}}">
+            <div class = "feedbox" style = "border : solid 1px gray; background-color : white"> 
+              <div style= "display : flex; flex-direction : row; align-items : center; margin : 0 15px;">
+                <div class = "box" style = "width : 50px; height : 50px; ">
+                  <a href = "/content/profile">
+                    <img class = "profile" src = "{% get_media_prefix %}{{ feed.profile_image }}">
+                  </a>
+                </div>
+                <div style="margin: 0 10px">
+                  {{ feed.nickname }}
+                </div>
+              {%if feed.delete %}<div feed_id = {{feed.id}} class = "delete_feed" style="margin-left : 300px; cursor :pointer; color :blue">삭제</div>{%else%}<div style="margin-left : 270px; cursor :pointer; color :blue">삭제 못함</div>{%endif%}
               </div>
-            </div>
-            <div><img style = "width:100%" src = "{% get_media_prefix %}{{ feed.image }}"> </div>
-            <div style= "margin :0 20px; display: flex; flex-direction: row; justify-content : space-between">
-              <div>
-                <span id = "favorite_{{feed.id}}" feed_id = "{{feed.id}}" class="favorite material-icons" style="color:red; cursor:pointer">{% if feed.is_liked %}favorite{% else %}favorite_border{% endif %}</span>
-                <span class="material-symbols-outlined">mode_comment</span>
-                <span class="material-symbols-outlined">send</span>
+              <div><img style = "width:100%" src = "{% get_media_prefix %}{{ feed.image }}"> </div>
+              <div style= "margin :0 20px; display: flex; flex-direction: row; justify-content : space-between">
+                <div>
+                  <span id = "favorite_{{feed.id}}" feed_id = "{{feed.id}}" class="favorite material-icons" style="color:red; cursor:pointer">{% if feed.is_liked %}favorite{% else %}favorite_border{% endif %}</span>
+                  <span class="material-symbols-outlined">mode_comment</span>
+                  <span class="material-symbols-outlined">send</span>
+                </div>
+                <div>
+                  <span id = "bookmark_{{feed.id}}" feed_id = "{{feed.id}}" class="bookmark material-icons" style="color:red; cursor:pointer">{% if feed.is_marked %}bookmark{% else %}bookmark_border{% endif %}</span>
+                </div>
               </div>
-              <div>
-                <span id = "bookmark_{{feed.id}}" feed_id = "{{feed.id}}" class="bookmark material-icons" style="color:red; cursor:pointer">{% if feed.is_marked %}bookmark{% else %}bookmark_border{% endif %}</span>
+              <div style = "margin :0 20px; text-align : left; font-size : 14px"> {{ feed.nickname }}님 <b>외 {{ feed.like_count }}명</b>이 좋아합니다.</div>
+              <div style = "margin :0 20px; text-align : left; font-size : 16px"><b>{{feed.nickname}}</b> {{ feed.content }}</div>
+              <div id = "reply_list_{{ feed.id }}">
+                {% for reply in feed.reply_list %}
+                  <div style = "margin :0 20px; text-align : left; font-size : 14px "><b>{{ reply.nickname }}</b> {{ reply.reply_content }}</div>
+                {% endfor%}
               </div>
-            </div>
-            <div style = "margin :0 20px; text-align : left; font-size : 14px"> {{ feed.nickname }}님 <b>외 {{ feed.like_count }}명</b>이 좋아합니다.</div>
-            <div style = "margin :0 20px; text-align : left; font-size : 16px"><b>{{feed.nickname}}</b> {{ feed.content }}</div>
-            <div id = "reply_list_{{ feed.id }}">
-              {% for reply in feed.reply_list %}
-                <div style = "margin :0 20px; text-align : left; font-size : 14px "><b>{{ reply.nickname }}</b> {{ reply.reply_content }}</div>
-              {% endfor%}
-            </div>
-            <div style = "display : flex; flex-direction : row; align-items : center; border-top : solid 1px gray">
-              <input id = "reply_{{feed.id}}" type="text" class="form-control" style= "box-shadow : none; border : none; outline : none" placeholder="댓글 달기..">
-              <div feed_id = "{{feed.id}}" class = "upload_reply"  style="width : 50px; color :cornflowerblue; font-weight :bold">
-                게시
+              <div style = "display : flex; flex-direction : row; align-items : center; border-top : solid 1px gray">
+                <input id = "reply_{{feed.id}}" type="text" class="form-control" style= "box-shadow : none; border : none; outline : none" placeholder="댓글 달기..">
+                <div feed_id = "{{feed.id}}" class = "upload_reply"  style="width : 50px; color :cornflowerblue; font-weight :bold">
+                  게시
+                </div>
               </div>
             </div>
           </div>
@@ -240,13 +243,38 @@
 
         <!-- Optional JavaScript; choose one of the two! -->
     <script>
+      $('.delete_feed').click(function(event){
+        if (confirm("정말 삭제하시겠습니까?"))
+          {
+            let feed_id = event.target.attributes.getNamedItem('feed_id').value;
+
+            $.ajax({
+              url : "/content/delete",
+              data : {
+                      feed_id : feed_id
+              },
+              method : "POST",
+              success : function (data){
+                console.log("성공");
+                $('#feed_list_' + feed_id).remove()
+              },
+              error : function (request, status, error){
+                console.log("에러");
+              },
+              complete : function(){
+                console.log("완료");
+              }
+            });
+          }
+        else
+          return False
+        
+      });
+      
       $('.follow').click(function(event){
         let following_id= event.target.id;
-        console.log(following_id)
         let user_id = event.target.attributes.getNamedItem('user_id').value;
-        console.log(user_id)
         let follow_text = $.trim($('#'+following_id).html());
-        console.log(follow_text)
         if (follow_text == '팔로우'){
          $('#'+following_id).html('언팔로우');
         }
@@ -311,7 +339,6 @@
         }else{
           $('#'+bookmark_id).html('bookmark');
         }
-        console.log(bookmark_text)
         $.ajax({
           url : "/content/bookmark",
           data : {feed_id :feed_id,
@@ -438,7 +465,6 @@
         e.stopPropagation();
         e.preventDefault();
 
-        console.log(e);
 
         if (e.type == "dragover"){
           $(e.target).css({
