@@ -130,48 +130,69 @@ class UploadReply(APIView):
     
 class ToggleLike(APIView):
     def post(self, request):
-        
+        # 좋아요, 해제 반복하면 id 숫자 늘어남
         feed_id = request.data.get('feed_id', None)
         favorite_text = request.data.get('favorite_text', True)
         
+        email = request.session.get('email', None)
+        
         if favorite_text == 'favorite_border':
-            is_like = True
-        else :
-            is_like = False
+            Like.objects.create(feed_id = feed_id, is_like = True, email = email)
             
-        email = request.session.get('email',None)
+        else :
+            Like.objects.filter(feed_id =feed_id, email = email).delete()
         
-        like = Like.objects.filter(feed_id=feed_id , email = email).first()
+        # id 숫자 줄이기
+        
+        # if favorite_text == 'favorite_border':
+        #     is_like = True
+        # else :
+        #     is_like = False
+            
+        # email = request.session.get('email',None)
+        
+        # like = Like.objects.filter(feed_id=feed_id , email = email).first()
         
         
-        if like:
-            like.is_like = is_like
-            like.save()
-        else:
-            Like.objects.create(feed_id=feed_id, is_like=is_like, email = email)
+        # if like:
+        #     like.is_like = is_like
+        #     like.save()
+        # else:
+        #     Like.objects.create(feed_id=feed_id, is_like=is_like, email = email)
         
         return Response(status=200)
     
 class ToggleBookmark(APIView):
     def post(self, request):
+        # 북마크, 해제 반복하면 id 숫자 늘어남
+        
+        email = request.session.get('email', None)
         
         feed_id = request.data.get('feed_id', None)
         bookmark_text = request.data.get('bookmark_text', True)
         
         if bookmark_text == 'bookmark_border':
-            is_marked = True
-        else :
-            is_marked = False
+            Bookmark.objects.create(feed_id = feed_id, is_marked = True, email = email)
             
-        email = request.session.get('email',None)
+        else :
+            Bookmark.objects.filter(feed_id =feed_id, email = email).delete()
         
-        bookmark = Bookmark.objects.filter(feed_id=feed_id , email = email).first()
+        # id 숫자 줄이기
         
-        if bookmark:
-            bookmark.is_marked = is_marked
-            bookmark.save()
-        else:
-            Bookmark.objects.create(feed_id=feed_id, is_marked=is_marked, email = email)
+        # if bookmark_text == 'bookmark_border':
+        #     is_marked = True
+        # else :
+        #     is_marked = False
+            
+        # email = request.session.get('email',None)
+        
+        # bookmark = Bookmark.objects.filter(feed_id=feed_id , email = email).first()
+        
+        # if bookmark:
+        #     bookmark.is_marked = is_marked
+        #     bookmark.save()
+        # else:
+        #     Bookmark.objects.create(feed_id=feed_id, is_marked=is_marked, email = email)
         
         return Response(status=200)
     
@@ -196,5 +217,8 @@ class FeedDelete(APIView):
         
         if Feed.objects.filter(email = email, id = feed_id).exists():
             Feed.objects.filter(email = email, id = feed_id).delete()
-        
+            Like.objects.filter(email = email, feed_id = feed_id).delete()
+            Reply.objects.filter(email = email, feed_id = feed_id ).delete()
+            Bookmark.objects.filter(email = email, feed_id = feed_id).delete()
+            
         return Response(status=200)
