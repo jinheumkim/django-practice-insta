@@ -4,7 +4,9 @@ from django.db import models
 class Feed(models.Model):
     content = models.TextField() #글 내용
     image = models.TextField() #피드 이미지
-    email = models.EmailField(default='') #글쓴이 
+    email = models.EmailField(default='') #글쓴이
+    nickname = models.CharField(max_length=24,default='')
+    like_count = models.IntegerField(default=0)
     
 class Like(models.Model):
     feed_id = models.IntegerField(default=0)

@@ -126,7 +126,7 @@
                   <span id = "bookmark_{{feed.id}}" feed_id = "{{feed.id}}" class="bookmark material-icons" style="color:red; cursor:pointer">{% if feed.is_marked %}bookmark{% else %}bookmark_border{% endif %}</span>
                 </div>
               </div>
-              <div style = "margin :0 20px; text-align : left; font-size : 14px"> {{ feed.nickname }}님 <b>외 {{ feed.like_count }}명</b>이 좋아합니다.</div>
+              <div id ="like_count_{{feed.id}}" style = "margin :0 20px; text-align : left; font-size : 14px"> {{ feed.nickname }}님 <b>외 {{ feed.like_count }}명</b>이 좋아합니다.</div>
               <div style = "margin :0 20px; text-align : left; font-size : 16px"><b>{{feed.nickname}}</b> {{ feed.content }}</div>
               <div id = "reply_list_{{ feed.id }}">
                 {% for reply in feed.reply_list %}
@@ -308,8 +308,10 @@
         let favorite_text = $.trim($('#'+favorite_id).html());
         if(favorite_text == 'favorite'){
           $('#'+favorite_id).html('favorite_border');
+          $('#like_count_'+feed_id).html("{{ feed.nickname }}님 <b>외 {{ feed.like_count|add:'-1' }}명</b>이 좋아합니다.")
         }else{
           $('#'+favorite_id).html('favorite');
+          $('#like_count_'+feed_id).html("{{ feed.nickname }}님 <b>외 {{ feed.like_count|add:'1' }}명</b>이 좋아합니다.")
         }
 
         $.ajax({
@@ -449,7 +451,7 @@
           },
           complete : function(){
             console.log("완료");
-            location.replace('main');
+            location.replace('/main');
           }
 
         });

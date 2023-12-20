@@ -27,9 +27,11 @@ class Main(APIView):
                 reply_list.append(dict(reply_content = reply.reply_content,
                                        nickname = user.nickname))
             like_count = Like.objects.filter(feed_id = feed.id, is_like = True).count()
+            Feed.objects.filter(email = feed.email, id = feed.id).update(like_count = like_count)
             is_liked = Like.objects.filter(feed_id = feed.id, email = email, is_like = True).exists()
             is_marked = Bookmark.objects.filter(feed_id = feed.id, email = email, is_marked = True).exists()
-            delete = Feed.objects.filter(email = email).exists()
+            login = User.objects.filter(email = email).first()
+            delete = Feed.objects.filter(email = login.email, nickname = feed.nickname).exists()
             feed_list.append(dict(id = feed.id,
                                   image = feed.image,
                                   like_count = like_count,
@@ -59,10 +61,12 @@ class Main(APIView):
         
         if user is None:
                 return render(request, "user/login.html")
-        
+            
+       
+        feed = Feed.objects.filter(email = email).first()
     
         
-        return render(request, "insta/main.html",context = dict(feeds = feed_list, user=user, follows = follow_list))
+        return render(request, "insta/main.html",context = dict(feed = feed, feeds = feed_list, user=user, follows = follow_list))
     
     
     
@@ -82,8 +86,9 @@ class UploadFeed(APIView):
         image = uuid_name
         content = request.data.get('content')
         email = request.session.get('email',None)
+        user = User.objects.filter(email = email).first()
         
-        Feed.objects.create(image = image, content = content, email = email)
+        Feed.objects.create(image = image, content = content, email = email, nickname = user.nickname)
         
         return Response(status=200)
     
@@ -134,31 +139,31 @@ class ToggleLike(APIView):
         feed_id = request.data.get('feed_id', None)
         favorite_text = request.data.get('favorite_text', True)
         
-        email = request.session.get('email', None)
+        # email = request.session.get('email', None)
         
-        if favorite_text == 'favorite_border':
-            Like.objects.create(feed_id = feed_id, is_like = True, email = email)
+        # if favorite_text == 'favorite_border':
+        #     Like.objects.create(feed_id = feed_id, is_like = True, email = email)
             
-        else :
-            Like.objects.filter(feed_id =feed_id, email = email).delete()
+        # else :
+        #     Like.objects.filter(feed_id =feed_id, email = email).delete()
         
         # id 숫자 줄이기
         
-        # if favorite_text == 'favorite_border':
-        #     is_like = True
-        # else :
-        #     is_like = False
+        if favorite_text == 'favorite_border':
+            is_like = True
+        else :
+            is_like = False
             
-        # email = request.session.get('email',None)
+        email = request.session.get('email',None)
         
-        # like = Like.objects.filter(feed_id=feed_id , email = email).first()
+        like = Like.objects.filter(feed_id=feed_id , email = email).first()
         
         
-        # if like:
-        #     like.is_like = is_like
-        #     like.save()
-        # else:
-        #     Like.objects.create(feed_id=feed_id, is_like=is_like, email = email)
+        if like:
+            like.is_like = is_like
+            like.save()
+        else:
+            Like.objects.create(feed_id=feed_id, is_like=is_like, email = email)
         
         return Response(status=200)
     
