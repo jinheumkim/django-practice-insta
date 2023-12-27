@@ -41,7 +41,9 @@ class Main(APIView):
                                   reply_list = reply_list,
                                   is_liked = is_liked,
                                   is_marked = is_marked,
-                                  delete = delete))
+                                  delete = delete,
+                                  user = user
+                                  ))
             
         
         follow_object_list = User.objects.exclude(email = email)
@@ -49,12 +51,14 @@ class Main(APIView):
         for follow in follow_object_list:
             login = User.objects.filter(email = email).first()
             followed = Follow.objects.filter(user_id = login.id, following_id = follow.id).exists()
+            user = User.objects.filter(email = follow.email).first()
             follow_list.append(dict(id = login.id,
                                     profile_image = follow.profile_image,
                                     nickname = follow.nickname,
                                     name = follow.name,
                                     following_id = follow.id,
-                                    followed = followed
+                                    followed = followed,
+                                    user= user
                                     ))
         
         user = User.objects.filter(email = email).first()
@@ -62,11 +66,10 @@ class Main(APIView):
         if user is None:
                 return render(request, "user/login.html")
             
-       
-        feed = Feed.objects.filter(email = email).first()
-    
+            
         
-        return render(request, "insta/main.html",context = dict(feed = feed, feeds = feed_list, user=user, follows = follow_list))
+        
+        return render(request, "insta/main.html",context = dict(feeds = feed_list, user = user, follows = follow_list))
     
     
     
@@ -93,16 +96,20 @@ class UploadFeed(APIView):
         return Response(status=200)
     
 class Profile(APIView):
-    def get(self, request):
+    def get(self, request, id):
         email = request.session.get('email',None)
         
         if email is None:
             return render(request, "user/login.html")
         
+        
         user = User.objects.filter(email = email).first()
         
         if user is None:
             return render(request, "user/login.html")
+        
+        
+        user = User.objects.get(id = id)
         
         feed_list = Feed.objects.filter(email = email)
         like_list = list(Like.objects.filter(email = email, is_like = True).values_list('feed_id', flat = True))
@@ -110,15 +117,15 @@ class Profile(APIView):
         bookmark_list = list(Bookmark.objects.filter(email = email, is_marked = True).values_list('feed_id',flat = True))
         bookmark_feed_list = Feed.objects.filter(id__in = bookmark_list)
         feed_list_count = Feed.objects.filter(email = email).count()
-        following_count = Follow.objects.exclude(user_id = user.id, following_id = None).count()
-        follower_count = Follow.objects.exclude(user_id = user.id, follower_id = None).count()
+        following_count = Follow.objects.filter(user_id = user.id).count()
+        follower_count = Follow.objects.filter(following_id = user.id).count()
         return render(request, "content/profile.html" , context = dict(user = user, 
                                                                        feed_list = feed_list,
                                                                        like_feed_list = like_feed_list,
                                                                        bookmark_feed_list = bookmark_feed_list,
                                                                        following_count = following_count,
                                                                        feed_list_count = feed_list_count,
-                                                                       follower_count = follower_count
+                                                                       follower_count = follower_count,
                                                                        ))
     
 class UploadReply(APIView):
