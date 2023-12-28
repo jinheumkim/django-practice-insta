@@ -20,6 +20,7 @@ class Main(APIView):
         feed_list = []
         for feed in feed_object_list:
             user = User.objects.filter(email = feed.email).first()
+            login = User.objects.filter(email = email).first()
             reply_object_list = Reply.objects.filter(feed_id = feed.id)
             reply_list = []
             for reply in reply_object_list:
@@ -32,6 +33,7 @@ class Main(APIView):
             is_marked = Bookmark.objects.filter(feed_id = feed.id, email = email, is_marked = True).exists()
             login = User.objects.filter(email = email).first()
             delete = Feed.objects.filter(email = login.email, nickname = feed.nickname).exists()
+            followed = Follow.objects.filter(user_id = login.id, following_id = user.id).exists()
             feed_list.append(dict(id = feed.id,
                                   image = feed.image,
                                   like_count = like_count,
@@ -42,10 +44,10 @@ class Main(APIView):
                                   is_liked = is_liked,
                                   is_marked = is_marked,
                                   delete = delete,
-                                  user = user
+                                  user = user,
+                                  followed = followed
                                   ))
             
-        
         follow_object_list = User.objects.exclude(email = email)
         follow_list = []
         for follow in follow_object_list:
@@ -60,7 +62,8 @@ class Main(APIView):
                                     followed = followed,
                                     user= user
                                     ))
-        
+            
+                                        
         user = User.objects.filter(email = email).first()
         
         if user is None:
@@ -111,12 +114,12 @@ class Profile(APIView):
         
         user = User.objects.get(id = id)
         
-        feed_list = Feed.objects.filter(email = email)
-        like_list = list(Like.objects.filter(email = email, is_like = True).values_list('feed_id', flat = True))
+        feed_list = Feed.objects.filter(email = user.email)
+        like_list = list(Like.objects.filter(email = user.email, is_like = True).values_list('feed_id', flat = True))
         like_feed_list = Feed.objects.filter(id__in = like_list)
-        bookmark_list = list(Bookmark.objects.filter(email = email, is_marked = True).values_list('feed_id',flat = True))
+        bookmark_list = list(Bookmark.objects.filter(email = user.email, is_marked = True).values_list('feed_id',flat = True))
         bookmark_feed_list = Feed.objects.filter(id__in = bookmark_list)
-        feed_list_count = Feed.objects.filter(email = email).count()
+        feed_list_count = Feed.objects.filter(email = user.email).count()
         following_count = Follow.objects.filter(user_id = user.id).count()
         follower_count = Follow.objects.filter(following_id = user.id).count()
         return render(request, "content/profile.html" , context = dict(user = user, 

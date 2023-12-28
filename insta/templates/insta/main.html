@@ -104,16 +104,16 @@
         {% for feed in feeds %}
           <div id = "feed_list_{{feed.id}}">
             <div class = "feedbox" style = "border : solid 1px gray; background-color : white"> 
-              <div style= "display : flex; flex-direction : row; align-items : center; margin : 0 15px;">
-                <div class = "box" style = "width : 50px; height : 50px; ">
+              <div style= "display : flex; flex-direction : row; align-items : center; justify-content :space-between;">
+                <div class = "box" style = "width : 50px; height : 50px; margin-left :10px ">
                   <a href = "{% url 'profile' id=feed.user.id %}">
                     <img class = "profile" src = "{% get_media_prefix %}{{ feed.profile_image }}">
                   </a>
                 </div>
-                <div style="margin: 0 10px">
+                <div style="position : absolute; margin-left : 70px">
                   {{ feed.nickname }}
                 </div>
-              {%if feed.delete %}<div feed_id = {{feed.id}} class = "delete_feed" style="margin-left : 300px; cursor :pointer; color :blue">삭제</div>{%else%}<div style="margin-left : 270px; cursor :pointer; color :blue">삭제 못함</div>{%endif%}
+                {%if feed.delete %}<div feed_id = {{feed.id}} class = "delete_feed" style="margin-left : 270px; margin-right : 10px; cursor :pointer; color :blue">삭제</div>{%else%}<div style="  margin-left: 270px; margin-right : 10px; cursor :pointer; color :blue;" user_id = {{user.id}} id = {{feed.user.id}} class = 'feed_in_follow'>{%if feed.followed %}언팔로우{%else%}팔로우{%endif%}</div>{%endif%}
               </div>
               <div><img style = "width:100%" src = "{% get_media_prefix %}{{ feed.image }}"> </div>
               <div style= "margin :0 20px; display: flex; flex-direction: row; justify-content : space-between">
@@ -275,12 +275,12 @@
         let following_id= event.target.id;
         let user_id = event.target.attributes.getNamedItem('user_id').value;
         let follow_text = $.trim($('#'+following_id).html());
-        if (follow_text == '팔로우'){
-         $('#'+following_id).html('언팔로우');
-        }
-        else{ 
-          $('#'+following_id).html('팔로우');
-        }
+        /*if (follow_text == '팔로우'){
+          $('#'+following_id).html('언팔로우');
+         }
+         else{ 
+           $('#'+following_id).html('팔로우');
+         }*/ /*새로고침 없이 html에 즉시 반영 코드*/
         $.ajax({
           url : "/content/follow",
           data : {
@@ -291,6 +291,34 @@
           method : "POST",
           success : function (data){
             console.log("성공");
+            location.reload()
+          },
+          error : function (request, status, error){
+            console.log("에러");
+          },
+          complete : function(){
+            console.log("완료");
+          }
+        });
+      });
+
+      $('.feed_in_follow').click(function(event){
+        let following_id= event.target.id;
+        console.log(following_id)
+        let user_id = event.target.attributes.getNamedItem('user_id').value;
+        console.log(user_id)
+        let follow_text = $.trim($('#'+following_id).html());
+        $.ajax({
+          url : "/content/follow",
+          data : {
+                  follow_text : follow_text,
+                  user_id : user_id,
+                  following_id :following_id,
+          },
+          method : "POST",
+          success : function (data){
+            console.log("성공");
+            location.reload()
           },
           error : function (request, status, error){
             console.log("에러");
