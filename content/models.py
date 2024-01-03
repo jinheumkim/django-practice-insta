@@ -22,3 +22,4 @@ class Reply(models.Model):
     feed_id = models.IntegerField(default=0)
     email = models.EmailField(default = '')
     reply_content = models.TextField()
+    

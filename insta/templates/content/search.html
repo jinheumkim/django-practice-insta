@@ -73,11 +73,13 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style = "position: fixed ; width :100%; z-index : 5">
         <div class="container-fluid" style = "justify-content: space-between; flex-wrap: nowrap ; min-width : 1000px">
           <a class="navbar-brand" href="/main">copy instagram</a>
+            <form method="get" action="{% url 'search' %}">
               <div style="display: flex;">
                 <button onclick="window.history.back()" style="border : none; align-items : center; padding-right : 10px" class="material-icons">arrow_back</button>
-                <input class="form-control me-2" id = "search" style="width:400px" type="search" placeholder="Search" aria-label="Search">
-                <button class = "btn-outline" >검색</button>
+                <input type="text" name="q" class="form-control me-2" id = "search" style="width:400px" type="search" placeholder="Search" aria-label="Search">
+                <button type = "submit" class = "btn-outline" >검색</button>
               </div>
+            </form>
               <div style="display: flex;">
                 <a href = "/main" class="material-symbols-outlined" style="padding-right : 10px; color : black; text-decoration : none">home</a>
                 <span class="material-symbols-outlined" style="padding-right : 10px;">send</span>
@@ -99,6 +101,40 @@
               </div>
         </div>
       </nav>
+      {% if results %}
+        <div style= "display : flex; flex-direction : row; text-align : center ; justify-content : center; padding-top : 60px; ">
+          <div style="width : 500px; min-width : 500px; height : 1000px; margin-right : 300px">
+              <div class = "feedbox" style = "border : solid 1px gray; background-color : white"> 
+                <div style= "display : flex; flex-direction : row; align-items : center; justify-content :space-between;">
+                  <div class = "box" style = "width : 50px; height : 50px; margin-left :10px ">
+                    <a href = "#">
+                      <img class = "profile" src = "default_profile.jpg">
+                      </a>
+                    </div>
+                          {% for result in results %}
+                              <li>{{ result.name }}</li>
+                          {% endfor %}
+            {% else %}
+              <p>No results found.</p>
+            {% endif %}
+      
+      <!-- <form method="get" action="{% url 'search' %}">
+        <input type="text" name="q" placeholder="Search...">
+        <button type="submit">Search</button>
+      </form>
+
+      <h2>Search Results for "{{ query }}"</h2>
+
+      {% if results %}
+          <ul>
+              {% for result in results %}
+                  <li>{{ result.name }}</li>
+              {% endfor %}
+          </ul>
+      {% else %}
+          <p>No results found.</p>
+      {% endif %} -->
+
 
       <!-- 첫 번째 모달 창 -->
       <div id = "first_modal" class = "modal_overlay">

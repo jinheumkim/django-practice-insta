@@ -237,3 +237,16 @@ class FeedDelete(APIView):
             Bookmark.objects.filter(email = email, feed_id = feed_id).delete()
             
         return Response(status=200)
+    
+
+def Search_view(request):
+    query = request.GET.get('q', '')  # 검색어를 가져옴
+
+    # 검색어가 존재하는 경우, 해당하는 모델을 필터링
+    if query:
+        results = User.objects.filter(name__icontains=query)
+    else:
+        results = User.objects.all()
+
+    
+    return render(request, 'content/search.html', context = dict(results = results, query = query))
